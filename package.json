@@ -1,0 +1,26 @@
+{
+  "name": "ecad",
+  "version": "0.0.0",
+  "description": "node.js Elasticache Auto Discovery client",
+  "author": {
+    "name": "MapBox",
+    "url": "http://mapbox.com/",
+    "email": "info@mapbox.com"
+  },
+  "main": "./index.js",
+  "keywords": [
+    "aws",
+    "elasticache"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mapbox/elasticache-auto-discovery.git"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "1.2.1",
+    "chai": "1.1.0"
+  }
+}
