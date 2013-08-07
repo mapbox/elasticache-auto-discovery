@@ -1,0 +1,6 @@
+CONFIG cluster 0 637
+1
+foo.a8ssop.0001.use1.cache.amazonaws.com|10.31.225.14|11211 foo.a8ssop.0002.use1.cache.amazonaws.com|10.159.50.131|11211 foo.a8ssop.0003.use1.cache.amazonaws.com|10.235.58.118|11211 foo.a8ssop.0004.use1.cache.amazonaws.com|10.232.21.251|11211 foo.a8ssop.0005.use1.cache.amazonaws.com|10.168.11.146|11211 foo.a8ssop.0006.use1.cache.amazonaws.com|10.29.38.11|11211 foo.a8ssop.0007.use1.cache.amazonaws.com|10.170.61.223|11211 foo.a8ssop.0008.use1.cache.amazonaws.com|10.232.52.92|11211 foo.a8ssop.0009.use1.cache.amazonaws.com|10.29.26.109|11211 foo.a8ssop.0010.use1.cache.amazonaws.com|10.235.43.233|11211
+
+END
+

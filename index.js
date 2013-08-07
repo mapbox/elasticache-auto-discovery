@@ -27,20 +27,9 @@ Ecad.prototype.fetch = function(fn) {
     });
 
     client.on('end', function() {
-        var payload = res.join('');
-        var lines = payload.split('\n');
-        if (!lines[2])
-            return fn(new Error('Bad response from Elasticache'));
-        var list = lines[2].split(' ');
-        if (!list.length)
-            return fn(new Error('No Elasticache endpoints found'));
-        list.forEach(function(item) {
-            var parts = item.split('|');
-            if (parts.length < 2)
-                return fn(new Error('Malformed host list from Elasticache'));
-            hosts.push(parts[0] + ':' + parts[2]);
-        });
-        fn(null, hosts);
+        var hosts = this._parse(res);
+        if (hosts instanceof Error) return fn(hosts);
+        else return fn(null, hosts);
     });
 
     client.on('timeout', function() {
@@ -51,6 +40,24 @@ Ecad.prototype.fetch = function(fn) {
     client.on('error', function(err) {
         return fn(err);
     });
+};
+
+Ecad.prototype._parse = function(res) {
+    var hosts = [];
+    var payload = res.join('');
+    var lines = payload.split('\n');
+    if (!lines[2])
+        return new Error('Bad response from Elasticache');
+    var list = lines[2].split(' ');
+    if (!list.length)
+        return new Error('No Elasticache endpoints found');
+    list.forEach(function(item) {
+        var parts = item.split('|');
+        if (parts.length < 2)
+            return new Error('Malformed host list from Elasticache');
+        hosts.push(parts[0] + ':' + parts[2]);
+    });
+    return hosts;
 };
 
 module.exports = Ecad;
