@@ -1,6 +1,6 @@
 {
   "name": "ecad",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "node.js Elasticache Auto Discovery client",
   "author": {
     "name": "MapBox",
