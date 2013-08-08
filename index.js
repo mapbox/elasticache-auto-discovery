@@ -7,9 +7,10 @@ var Ecad = function(options) {
 
     this.config = options;
     return this;
-}
+};
 
 Ecad.prototype.fetch = function(fn) {
+    var that = this;
     var opts = this.config;
     var res = [];
     var hosts = [];
@@ -27,13 +28,15 @@ Ecad.prototype.fetch = function(fn) {
     });
 
     client.on('end', function() {
-        var hosts = this._parse(res);
+        var hosts = that._parse(res);
         if (hosts instanceof Error) return fn(hosts);
         else return fn(null, hosts);
     });
 
     client.on('timeout', function() {
+        client.removeAllListeners();
         client.end();
+        client.destroy();
         return fn(new Error('Elasticache auto-discovery request timed out'));
     });
 
