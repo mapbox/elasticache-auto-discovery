@@ -6,7 +6,10 @@ node.js client for AWS Elasticache [Auto Discovery Endpoint](http://docs.aws.ama
 
 ```javascript
 var Ecad = require('ecad');
-var client = new Ecad({host: 'my-ecad-endpoint', port: 11211});
+var endpoints = [
+  'my-elasticache-cluster-hostname1:11211',
+  'my-elasticache-cluster-hostname2:11211'];
+var client = new Ecad({{endpoints: endpoints, timeout: 500}});
 client.fetch(err, hosts) {
     // that's it.
 });
