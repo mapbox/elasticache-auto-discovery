@@ -11,7 +11,7 @@ describe('Elasticache Auto Discovery', function() {
     describe('#parsing', function() {
 
         it('should parse payload with single host', function() {
-            var ecad = new Ecad({host: 'localhost', port: 11211});
+            var ecad = new Ecad({endpoints: 'localhost:11211'});
             var payload = fs.readFileSync(__dirname + '/fixtures/single', 'utf8');
             var hosts = ecad._parse([payload]);
             expect(hosts).to.deep.equal([
@@ -19,7 +19,7 @@ describe('Elasticache Auto Discovery', function() {
             ]);
         });
         it('should parse payload with multiple hosts', function() {
-            var ecad = new Ecad({host: 'localhost', port: 11211});
+            var ecad = new Ecad({endpoints: 'localhost:11211'});
             var payload = fs.readFileSync(__dirname + '/fixtures/multiple', 'utf8');
             var hosts = ecad._parse([payload]);
             expect(hosts).to.deep.equal([
@@ -36,14 +36,14 @@ describe('Elasticache Auto Discovery', function() {
             ]);
         });
         it('should return error on empty payload', function() {
-            var ecad = new Ecad({host: 'localhost', port: 11211});
+            var ecad = new Ecad({endpoints: 'localhost:11211'});
             var payload = fs.readFileSync(__dirname + '/fixtures/empty', 'utf8');
             var hosts = ecad._parse([payload]);
             expect(function() { throw hosts; })
               .to.throw(/Bad response from Elasticache/);
         });
         it('should return error on bad hosts line', function() {
-            var ecad = new Ecad({host: 'localhost', port: 11211});
+            var ecad = new Ecad({endpoints: 'localhost:11211'});
             var payload = fs.readFileSync(__dirname + '/fixtures/badhosts', 'utf8');
             var hosts = ecad._parse([payload]);
             expect(function() { throw hosts; })
@@ -53,7 +53,7 @@ describe('Elasticache Auto Discovery', function() {
 
     describe('#fetching', function() {
         it('should return error when unable to connect to host', function(done) {
-            var ecad = new Ecad({host: '10.255.255.255', port: 11211, timeout:500});
+            var ecad = new Ecad({endpoints: '10.255.255.255:11211', timeout: 500});
             ecad.fetch(function(err, hosts) {
                 expect(function() { throw err; })
                   .to.throw(/Elasticache auto-discovery request timed out/);

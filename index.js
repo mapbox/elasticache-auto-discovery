@@ -1,10 +1,10 @@
 var net = require('net');
+var Step = require('step');
 
 var Ecad = function(options) {
-    options.port = options.port || 11211;
-    options.host = options.host || 'localhost';
     options.timeout = options.timeout || 3000;
-
+    options.endpoints = Array.isArray(options.endpoints) ? options.endpoints :
+      [options.endpoints];
     this.config = options;
     return this;
 };
@@ -12,9 +12,30 @@ var Ecad = function(options) {
 Ecad.prototype.fetch = function(fn) {
     var that = this;
     var opts = this.config;
+    var list = [];
+    Step(function() {
+        var group = this.group();
+        opts.endpoints.forEach(function(endpoint) {
+            that._fetch(endpoint, group());
+        });
+    }, function(err, res) {
+        if (err) return fn(err);
+        list = list.concat.apply(list, res);
+        fn(null, list);
+    });
+};
+
+Ecad.prototype._fetch = function(endpoint, fn) {
+    var that = this;
+    var opts = this.config;
     var res = [];
     var hosts = [];
-    var client = net.connect({port: opts.port, host: opts.host}, function() {
+
+    if (!~endpoint.indexOf(':'))
+        return fn(new Error('Not a valid Elasticache endpoint'));
+
+    var parts = endpoint.split(':');
+    var client = net.connect({host: parts[0], port: parts[1]}, function() {
         client.write('config get cluster\r\n');
     });
 
