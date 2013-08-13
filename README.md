@@ -2,6 +2,13 @@
 
 node.js client for AWS Elasticache [Auto Discovery Endpoint](http://docs.aws.amazon.com/AmazonElastiCache/latest/UserGuide/AutoDiscovery.html)
 
+### Description
+
+Specify a list of Elasticache Auto Discovery Endpoints to this tiny TCP client
+and receive in response a list of Elasticache host nodes found by each of the
+Auto Discovery endpoints.  The result will be an array of Elasticache nodes
+specified in host:port notation.
+
 ### Usage
 
 ```javascript
@@ -9,7 +16,7 @@ var Ecad = require('ecad');
 var endpoints = [
   'my-elasticache-cluster-hostname1:11211',
   'my-elasticache-cluster-hostname2:11211'];
-var client = new Ecad({{endpoints: endpoints, timeout: 500}});
+var client = new Ecad({{endpoints: endpoints, timeout: 10000}});
 client.fetch(err, hosts) {
     // that's it.
 });
