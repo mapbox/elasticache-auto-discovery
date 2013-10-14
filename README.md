@@ -16,8 +16,10 @@ var Ecad = require('ecad');
 var endpoints = [
   'my-elasticache-cluster-hostname1:11211',
   'my-elasticache-cluster-hostname2:11211'];
-var client = new Ecad({{endpoints: endpoints, timeout: 10000}});
-client.fetch(err, hosts) {
+var client = new Ecad({endpoints: endpoints, timeout: 10000});
+client.fetch(function(err, hosts) {
+    if (err) throw err;
+    console.log(hosts);
     // that's it.
 });
 ```
