@@ -32,7 +32,7 @@ Ecad.prototype._fetch = function(endpoint, fn) {
     var hosts = [];
 
     if (!~endpoint.indexOf(':'))
-        return fn(new Error('Not a valid Elasticache endpoint'));
+        return fn(new Error('Not a valid Elasticache endpoint. Endpoint: ' + endpoint));
 
     var parts = endpoint.split(':');
     var client = net.connect({host: parts[0], port: parts[1]}, function() {
@@ -50,7 +50,7 @@ Ecad.prototype._fetch = function(endpoint, fn) {
 
     client.on('end', function() {
         var hosts = that._parse(res);
-        if (hosts instanceof Error) return fn(hosts);
+        if (hosts instanceof Error) return fn(hosts + ' Endpoint: ' + endpoint);
         else return fn(null, hosts);
     });
 
@@ -58,7 +58,8 @@ Ecad.prototype._fetch = function(endpoint, fn) {
         client.removeAllListeners();
         client.end();
         client.destroy();
-        return fn(new Error('Elasticache auto-discovery request timed out'));
+        return fn(new Error('Elasticache auto-discovery request timed out. ' +
+            'Endpoint: ' + endpoint));
     });
 
     client.on('error', function(err) {
@@ -71,14 +72,14 @@ Ecad.prototype._parse = function(res) {
     var payload = res.join('');
     var lines = payload.split('\n');
     if (!lines[2])
-        return new Error('Bad response from Elasticache');
+        return new Error('Bad response from Elasticache.');
     var list = lines[2].split(' ');
     if (!list.length)
-        return new Error('No Elasticache endpoints found');
+        return new Error('No Elasticache hosts found.');
     list.forEach(function(item) {
         var parts = item.split('|');
         if (parts.length < 2)
-            return new Error('Malformed host list from Elasticache');
+            return new Error('Malformed host list from Elasticache.');
         hosts.push(parts[0] + ':' + parts[2]);
     });
     return hosts;
