@@ -49,9 +49,10 @@ Ecad.prototype._fetch = function(endpoint, fn) {
     });
 
     client.on('end', function() {
-        var hosts = that._parse(res);
-        if (hosts instanceof Error) return fn(hosts + ' Endpoint: ' + endpoint);
-        else return fn(null, hosts);
+        var result = that._parse(res);
+        if (result instanceof Error)
+            return fn(new Error(result.message + ' Endpoint: ' + endpoint));
+        else return fn(null, result);
     });
 
     client.on('timeout', function() {
@@ -63,7 +64,8 @@ Ecad.prototype._fetch = function(endpoint, fn) {
     });
 
     client.on('error', function(err) {
-        return fn(err);
+        return fn(new Error('Elasticache auto-discovery request error: ' + err +
+            ' Endpoint: ' + endpoint));
     });
 };
 
