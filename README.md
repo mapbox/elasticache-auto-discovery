@@ -23,3 +23,12 @@ client.fetch(function(err, hosts) {
     // that's it.
 });
 ```
+
+#### Options
+
+- `retries` the number of times to retry connecting to each endpoint.
+- `timeout` timeout connection attempt after this many ms.
+- `minTimeout` minimum time to wait before retrying connection. Valid only if
+  `retries` is not 0.
+- `maxTimeout` maximum time to wait before retrying connection. Valid only if
+  `retries` is not 0.
