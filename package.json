@@ -20,7 +20,8 @@
     "test": "mocha"
   },
   "dependencies": {
-    "step": "0.0.5"
+    "step": "0.0.5",
+    "retry": "0.6.0"
   },
   "devDependencies": {
     "mocha": "1.2.1",

@@ -1,8 +1,12 @@
 var net = require('net');
 var Step = require('step');
+var retry = require('retry');
 
 var Ecad = function(options) {
     options.timeout = options.timeout || 3000;
+    options.minTimeout = options.minTimeout || 1000;
+    options.maxTimeout = options.maxTimeout || 2000;
+    options.retries = options.retries || 0;
     options.endpoints = Array.isArray(options.endpoints) ? options.endpoints :
       [options.endpoints];
     this.config = options;
@@ -13,13 +17,32 @@ Ecad.prototype.fetch = function(fn) {
     var that = this;
     var opts = this.config;
     var list = [];
+
+    var attempt = function(endpoint, cb) {
+        var operation = retry.operation({
+            retries: opts.retries,
+            minTimout: opts.minTimeout,
+            maxTimeout: opts.maxTimeout
+        });
+        operation.attempt(function(attempts) {
+            that._fetch(endpoint, function(err, result) {
+                if (operation.retry(err)) {
+                    return;
+                }
+                if (err) return cb(operation.mainError(), attempts);
+                else return cb(null, result);
+            });
+        });
+    };
+
     Step(function() {
         var group = this.group();
         opts.endpoints.forEach(function(endpoint) {
-            that._fetch(endpoint, group());
+            attempt(endpoint, group());
         });
     }, function(err, res) {
-        if (err) return fn(err);
+        // In case of err, res will be number of attempts
+        if (err) return fn(err, res);
         list = list.concat.apply(list, res);
         fn(null, list);
     });

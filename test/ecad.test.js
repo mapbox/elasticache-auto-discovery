@@ -60,6 +60,21 @@ describe('Elasticache Auto Discovery', function() {
                 done();
             });
         });
+        it('should retry three times when unable to connect to host', function(done) {
+            this.timeout(20000);
+            var ecad = new Ecad({
+              endpoints: '10.255.255.255:11211',
+              timeout: 500,
+              minTimeout: 1000,
+              maxTimeout: 1000,
+              retries: 2});
+            ecad.fetch(function(err, hosts) {
+                expect(function() { throw err; })
+                  .to.throw(/Elasticache auto-discovery request timed out/);
+                expect(hosts.pop()).to.eql(3);
+                done();
+            });
+        });
     });
 
 });
