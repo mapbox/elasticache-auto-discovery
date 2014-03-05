@@ -24,12 +24,13 @@ Ecad.prototype.fetch = function(fn) {
             minTimout: opts.minTimeout,
             maxTimeout: opts.maxTimeout
         });
-        operation.attempt(function() {
+        operation.attempt(function(attempts) {
             that._fetch(endpoint, function(err, result) {
                 if (operation.retry(err)) {
                     return;
                 }
-                cb(operation.mainError(), result);
+                if (err) return cb(operation.mainError(), attempts);
+                else return cb(null, result);
             });
         });
     };
@@ -40,7 +41,8 @@ Ecad.prototype.fetch = function(fn) {
             attempt(endpoint, group());
         });
     }, function(err, res) {
-        if (err) return fn(err);
+        // In case of err, res will be number of attempts
+        if (err) return fn(err, res);
         list = list.concat.apply(list, res);
         fn(null, list);
     });
