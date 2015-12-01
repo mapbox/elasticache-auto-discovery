@@ -49,6 +49,13 @@ describe('Elasticache Auto Discovery', function() {
             expect(function() { throw hosts; })
               .to.throw(/No Elasticache hosts found/);
         });
+      it('should return error for ERROR memcached response', function() {
+        var ecad = new Ecad({endpoints: 'localhost:11211'});
+        var payload = 'ERROR';
+        var hosts = ecad._parse([payload]);
+        expect(function() { throw hosts; })
+            .to.throw(/Bad response from Elasticache./);
+      });
     });
 
     describe('#fetching', function() {

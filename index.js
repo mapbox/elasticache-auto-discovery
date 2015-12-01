@@ -67,7 +67,7 @@ Ecad.prototype._fetch = function(endpoint, fn) {
 
     client.on('data', function(chunk) {
         res.push(chunk);
-        if (~chunk.indexOf('END'))
+        if (~chunk.indexOf('END') || ~chunk.indexOf('ERROR'))
             client.end();
     });
 
